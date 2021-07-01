@@ -79,6 +79,7 @@ namespace DisneyClone.Services
                 signingCredentials: cred);
 
             var tokenHandler = new JwtSecurityTokenHandler();
+            
             return tokenHandler.WriteToken(token);
 
         }

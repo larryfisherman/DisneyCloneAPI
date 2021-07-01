@@ -8,7 +8,11 @@ namespace DisneyClone.Entities
 {
     public class DisneyCloneDbContext : DbContext
     {
-        private string _connectionString = "Server=ALBERT-PC\\DisneyClone;Database=DisneyCloneDb;Trusted_Connection=True;";
+
+        public DisneyCloneDbContext(DbContextOptions<DisneyCloneDbContext> options) : base(options) {
+
+
+        }
 
         public DbSet<Movie> Movies { get; set; }
         public DbSet<User> Users { get; set; }
@@ -22,9 +26,5 @@ namespace DisneyClone.Entities
                 .HasMaxLength(50);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(_connectionString);
-        }
     }
 }

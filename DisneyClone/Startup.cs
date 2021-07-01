@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -57,10 +58,12 @@ namespace DisneyClone
             });
 
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-            services.AddDbContext<DisneyCloneDbContext>();
+            services.AddDbContext<DisneyCloneDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DisneyCloneDbConnection")));
             services.AddScoped<IMoviesService, MoviesService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<DisneyCloneSeeder>();
+            services.AddHttpContextAccessor();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("FrontEndClient", builder =>
@@ -79,7 +82,7 @@ namespace DisneyClone
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DisneyCloneSeeder seeder)
         {
             if (env.IsDevelopment())
             {
@@ -88,9 +91,14 @@ namespace DisneyClone
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DisneyClone v1"));
             }
 
+            app.UseResponseCaching();
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
 
             app.UseCors("FrontEndClient");
+
+            seeder.Seed();
 
             app.UseRouting();
 

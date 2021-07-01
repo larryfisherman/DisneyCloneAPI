@@ -1,5 +1,6 @@
 ﻿using DisneyClone.Models;
 using DisneyClone.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace DisneyClone.Controllers
-{
+{   
     [Route("api/movies")]
     [ApiController]
     public class MoviesController : ControllerBase
